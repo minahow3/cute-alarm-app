@@ -1,8 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Calendar } from "react-native-calendars";
 
-const HistoryScreen = () => {
+const HistoryScreen = ({ route }) => {
+  console.log(route);
+  const [markedDates, setMarkedDates] = useState({});
+
+  useEffect(() => {
+    // アラームが止まった情報があればカレンダーを更新
+    if (route.params?.alarmStopped) {
+      console.log(route.params?.alarmStopped);
+      updateCalendar(); // カレンダー更新関数の呼び出し
+    }
+  }, [route.params?.alarmStopped]);
+
+  const updateCalendar = () => {
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    console.log(formattedDate);
+    // カレンダーの日付を更新
+    setMarkedDates((prevMarkedDates) => {
+      return {
+        ...prevMarkedDates,
+        [formattedDate]: { selected: true, marked: true, dotColor: 'green' },
+      };
+    });
+  };
+
+  //   const markedDates = {
+  //   "2023-12-01": { selected: true, marked: true, dotColor: "green" }, // 今日
+  //   "2023-11-30": { selected: true, marked: true, dotColor: "green" }, // 昨日
+  // };
+
   // セリフデータに獲得フラグを追加
   const phrases = [
     {
@@ -34,11 +63,6 @@ const HistoryScreen = () => {
     },
     // 他のセリフデータも同様に
   ];
-
-  const markedDates = {
-    "2023-12-01": { selected: true, marked: true, dotColor: "green" }, // 今日
-    "2023-11-30": { selected: true, marked: true, dotColor: "green" }, // 昨日
-  };
 
   const renderPhraseItem = ({ item }) => (
     <View style={styles.phraseItem}>

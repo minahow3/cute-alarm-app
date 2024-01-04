@@ -4,7 +4,7 @@ import { Audio } from 'expo-av';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 
-const AlarmScreen = () => {
+const AlarmScreen = ({ navigation }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [alarms, setAlarms] = useState([
     { time: new Date(), isActive: false },
@@ -13,7 +13,6 @@ const AlarmScreen = () => {
   ]);
   const [showPicker, setShowPicker] = useState(false);
   const [sound, setSound] = useState();
-  const [alarmRinging, setAlarmRinging] = useState(false);
   const [selectedAlarmIndex, setSelectedAlarmIndex] = useState(0);
   const [editedAlarmIndex, setEditedAlarmIndex] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -110,6 +109,9 @@ const AlarmScreen = () => {
     if (sound) {
       clearInterval(alarmIntervalId); // インターバルの停止
       await sound.unloadAsync();
+
+      // アラームが止まった情報をHistoryScreenに送信
+      navigation.navigate('History', { alarmStopped: true });
     }
   };
 
