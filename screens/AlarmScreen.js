@@ -1,8 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity,Switch, StyleSheet, Image,Button} from 'react-native';
-import { Audio } from 'expo-av';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Modal from 'react-native-modal';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Switch,
+  StyleSheet,
+  Image,
+  Button,
+} from "react-native";
+import { Audio } from "expo-av";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Modal from "react-native-modal";
+
+const voiceFiles = {
+  1: require("../voice/voice1.mp3"),
+  2: require("../voice/voice2.mp3"),
+  3: require("../voice/voice3.mp3"),
+  4: require("../voice/voice4.mp3"),
+  5: require("../voice/voice5.mp3"),
+  6: require("../voice/voice11.mp3"),
+  7: require("../voice/voice12.mp3"),
+  8: require("../voice/voice13.mp3"),
+  9: require("../voice/voice14.mp3"),
+  10: require("../voice/voice21.mp3"),
+};
 
 const AlarmScreen = ({ navigation }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -16,7 +37,7 @@ const AlarmScreen = ({ navigation }) => {
   const [selectedAlarmIndex, setSelectedAlarmIndex] = useState(0);
   const [editedAlarmIndex, setEditedAlarmIndex] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [alarmIntervalId, setAlarmIntervalId] = useState(null)
+  const [alarmIntervalId, setAlarmIntervalId] = useState(null);
 
   useEffect(() => {
     // 現在時刻の更新とアラームのチェックを1秒ごとに行う
@@ -52,13 +73,18 @@ const AlarmScreen = ({ navigation }) => {
   const handleSave = () => {
     hideDateTimePicker();
     // ここでアラームの時間を保存するなどの処理を行う
-    console.log('保存されました:', alarms[editedAlarmIndex].time);
+    console.log("保存されました:", alarms[editedAlarmIndex].time);
   };
 
   const toggleAlarm = (index) => {
     const updatedAlarms = [...alarms];
     updatedAlarms[index].isActive = !updatedAlarms[index].isActive;
     setAlarms(updatedAlarms);
+    console.log(
+      "アラームON/OFF変更:",
+      alarms[editedAlarmIndex],
+      alarms[editedAlarmIndex].time
+    );
   };
 
   const checkAlarms = async () => {
@@ -72,12 +98,18 @@ const AlarmScreen = ({ navigation }) => {
         alarmTime.getHours() === currentTime.getHours() &&
         alarmTime.getMinutes() === currentTime.getMinutes()
       ) {
-        console.log('checkAlarms');
         alarm.isActive = !alarm.isActive;
         setShowPopup(true); // アラームが鳴っている場合、ポップアップを表示
+
+        // ランダムなインデックスを取得
+        const randomIndex = Math.floor(Math.random() * 10) + 1; // 10個の音声ファイルがあると仮定
+        console.log(randomIndex);
+        // ランダムに選択された音声ファイルを再生
+        playAlarmSound(voiceFiles[randomIndex]);
+
         // 10秒ごとに音声を再生
         const intervalId = setInterval(() => {
-          playAlarmSound();
+          playAlarmSound(voiceFiles[randomIndex]);
         }, 10000);
 
         // 1分後に音声再生を停止
@@ -93,15 +125,14 @@ const AlarmScreen = ({ navigation }) => {
     }
   };
 
-  const playAlarmSound = async () => {
+  const playAlarmSound = async (file) => {
     try {
-      const { sound } = await Audio.Sound.createAsync(
-        require('../voice/voice1.mp3'),
-        { shouldPlay: true }
-      );
+      const { sound } = await Audio.Sound.createAsync(file, {
+        shouldPlay: true,
+      });
       setSound(sound);
     } catch (error) {
-      console.error('音声ファイルの読み込みまたは再生に失敗しました', error);
+      console.error("音声ファイルの読み込みまたは再生に失敗しました", error);
     }
   };
 
@@ -111,7 +142,7 @@ const AlarmScreen = ({ navigation }) => {
       await sound.unloadAsync();
 
       // アラームが止まった情報をHistoryScreenに送信
-      navigation.navigate('History', { alarmStopped: true });
+      navigation.navigate("History", { alarmStopped: true });
     }
   };
 
@@ -127,23 +158,35 @@ const AlarmScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>アラーム</Text>
         <Text style={styles.currentTimeText}>
-          現在の時刻: {currentTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+          現在の時刻:{" "}
+          {currentTime.toLocaleTimeString("ja-JP", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })}
         </Text>
       </View>
       <View style={styles.alarmsContainer}>
         {alarms.map((alarm, index) => (
           <View key={index} style={styles.alarmItem}>
             <Text style={styles.alarmTimeText}>
-              アラーム {index + 1} :  {alarm.time.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+              アラーム {index + 1} :{" "}
+              {alarm.time.toLocaleTimeString("ja-JP", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </Text>
             <TouchableOpacity onPress={() => showDateTimePicker(index)}>
-              <Image source={require('../assets/edit.png')} style={styles.editIcon} />
+              <Image
+                source={require("../assets/edit.png")}
+                style={styles.editIcon}
+              />
             </TouchableOpacity>
             <Switch
               value={alarm.isActive}
               onValueChange={() => toggleAlarm(index)}
-              thumbColor={alarm.isActive ? 'white' : 'white'}
-              trackColor={{ false: '#8E8E93', true: '#007AFF' }}
+              thumbColor={alarm.isActive ? "white" : "white"}
+              trackColor={{ false: "#8E8E93", true: "#007AFF" }}
               ios_backgroundColor="#8E8E93"
             />
           </View>
@@ -151,12 +194,12 @@ const AlarmScreen = ({ navigation }) => {
       </View>
       {showPicker && (
         <>
-        <DateTimePicker
-          value={alarms[selectedAlarmIndex].time}
-          mode="time"
-          is24Hour={true}
-          display="spinner"
-          onChange={handleDateChange}
+          <DateTimePicker
+            value={alarms[selectedAlarmIndex].time}
+            mode="time"
+            is24Hour={true}
+            display="spinner"
+            onChange={handleDateChange}
           />
           <Button title="保存" onPress={handleSave} />
         </>
@@ -166,7 +209,7 @@ const AlarmScreen = ({ navigation }) => {
           <View style={styles.popupContainer}>
             <Text style={styles.popupText}>アラームを停止しますか？</Text>
             <TouchableOpacity
-              style={[styles.popupButton, { backgroundColor: '#007AFF' }]}
+              style={[styles.popupButton, { backgroundColor: "#007AFF" }]}
               onPress={() => handlePopupButtonPress(stopAlarm)}
             >
               <Text style={styles.popupButtonText}>はい</Text>
@@ -176,12 +219,12 @@ const AlarmScreen = ({ navigation }) => {
       )}
     </View>
   );
-      }
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
     paddingTop: 40,
@@ -189,7 +232,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   currentTimeText: {
     fontSize: 18,
@@ -199,10 +242,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   alarmItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin:15
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 15,
   },
   alarmTimeText: {
     fontSize: 18,
@@ -219,8 +262,8 @@ const styles = StyleSheet.create({
   },
   stopAlarmContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   stopAlarmText: {
     fontSize: 18,
@@ -228,30 +271,30 @@ const styles = StyleSheet.create({
   },
   stopAlarmButton: {
     fontSize: 18,
-    color: 'blue',
+    color: "blue",
   },
   // ポップアップ用のスタイル
   modal: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   popupContainer: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   popupText: {
     fontSize: 18,
     marginBottom: 20,
-    color: 'white',
+    color: "white",
   },
   popupButton: {
     padding: 10,
     borderRadius: 5,
   },
   popupButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });
