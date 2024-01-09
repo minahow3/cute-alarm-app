@@ -18,11 +18,11 @@ const voiceFiles = {
   3: require("../voice/voice3.mp3"),
   4: require("../voice/voice4.mp3"),
   5: require("../voice/voice5.mp3"),
-  6: require("../voice/voice11.mp3"),
-  7: require("../voice/voice12.mp3"),
-  8: require("../voice/voice13.mp3"),
-  9: require("../voice/voice14.mp3"),
-  10: require("../voice/voice21.mp3"),
+  6: require("../voice/voice6.mp3"),
+  7: require("../voice/voice7.mp3"),
+  8: require("../voice/voice8.mp3"),
+  9: require("../voice/voice9.mp3"),
+  10: require("../voice/voice10.mp3"),
 };
 
 const AlarmScreen = ({ navigation }) => {
@@ -38,6 +38,7 @@ const AlarmScreen = ({ navigation }) => {
   const [editedAlarmIndex, setEditedAlarmIndex] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [alarmIntervalId, setAlarmIntervalId] = useState(null);
+  const [randomIndex, setRandomIndex] = useState(null);
 
   useEffect(() => {
     // 現在時刻の更新とアラームのチェックを1秒ごとに行う
@@ -102,14 +103,16 @@ const AlarmScreen = ({ navigation }) => {
         setShowPopup(true); // アラームが鳴っている場合、ポップアップを表示
 
         // ランダムなインデックスを取得
-        const randomIndex = Math.floor(Math.random() * 10) + 1; // 10個の音声ファイルがあると仮定
-        console.log(randomIndex);
+        const newIndex = Math.floor(Math.random() * 10) + 1; // 10個の音声ファイルがあると仮定
+        console.log(newIndex);
+
+        setRandomIndex(newIndex - 1);
         // ランダムに選択された音声ファイルを再生
-        playAlarmSound(voiceFiles[randomIndex]);
+        playAlarmSound(voiceFiles[newIndex]);
 
         // 10秒ごとに音声を再生
         const intervalId = setInterval(() => {
-          playAlarmSound(voiceFiles[randomIndex]);
+          playAlarmSound(voiceFiles[newIndex]);
         }, 10000);
 
         // 1分後に音声再生を停止
@@ -142,7 +145,10 @@ const AlarmScreen = ({ navigation }) => {
       await sound.unloadAsync();
 
       // アラームが止まった情報をHistoryScreenに送信
-      navigation.navigate("History", { alarmStopped: true });
+      navigation.navigate("History", {
+        alarmStopped: true,
+        playedPhraseIndex: randomIndex,
+      });
     }
   };
 
