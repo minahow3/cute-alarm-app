@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { Calendar } from "react-native-calendars";
+import { Audio } from "expo-av";
 
 const HistoryScreen = ({ route }) => {
   console.log(route);
@@ -9,7 +16,7 @@ const HistoryScreen = ({ route }) => {
     {
       id: 1,
       text: "おはようございます。今日も一緒に素敵な1日を迎えましょう。",
-      achieved: false,
+      achieved: true,
     },
     { id: 2, text: "おはよう。なんでそんなに笑ってるの？", achieved: false },
     {
@@ -96,10 +103,53 @@ const HistoryScreen = ({ route }) => {
   };
 
   const renderPhraseItem = ({ item }) => (
-    <View style={styles.phraseItem}>
+    <TouchableOpacity
+      style={styles.phraseItem}
+      onPress={() => handlePhrasePress(item.id, item.achieved)}
+    >
       <Text>{item.achieved ? item.text : "???"}</Text>
-    </View>
+    </TouchableOpacity>
   );
+
+  const handlePhrasePress = (voiceIndex, isAchieved) => {
+    playAudio(voiceIndex, isAchieved);
+  };
+
+  const playAudio = async (voiceIndex, isAchieved) => {
+    // achieved が false の場合は再生しない
+    if (!isAchieved) {
+      return;
+    }
+
+    try {
+      console.log("playing");
+      const voiceFiles = {
+        1: require("../voice/voice1.mp3"),
+        2: require("../voice/voice2.mp3"),
+        3: require("../voice/voice3.mp3"),
+        4: require("../voice/voice4.mp3"),
+        5: require("../voice/voice5.mp3"),
+        6: require("../voice/voice6.mp3"),
+        7: require("../voice/voice7.mp3"),
+        8: require("../voice/voice8.mp3"),
+        9: require("../voice/voice9.mp3"),
+        10: require("../voice/voice10.mp3"),
+      };
+
+      const { sound } = await Audio.Sound.createAsync(voiceFiles[voiceIndex], {
+        shouldPlay: true,
+      });
+
+      // 再生が終了したらアンロード
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        }
+      });
+    } catch (error) {
+      console.error("音声の再生中にエラーが発生しました", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
