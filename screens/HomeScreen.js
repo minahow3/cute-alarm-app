@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, Button, StyleSheet, Image } from "react-native";
 import { Icon } from "react-native-elements";
-import * as Animatable from "react-native-animatable";
 
 const HomeScreen = ({ navigation }) => {
   return (

@@ -9,11 +9,8 @@ import HistoryScreen from "./screens/HistoryScreen";
 import AlarmScreen from "./screens/AlarmScreen";
 import ConfigScreen from "./screens/ConfigScreen";
 
-const forFade = ({ current }) => ({
-  cardStyle: {
-    opacity: current.progress,
-  },
-});
+import { AppProvider } from "./hook/AppContext.js";
+
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
@@ -36,11 +33,13 @@ function TopTab() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="TopTab" component={TopTab} />
-        <Stack.Screen name="Config" component={ConfigScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AppProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="TopTab" component={TopTab} />
+          <Stack.Screen name="Config" component={ConfigScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppProvider>
   );
 }

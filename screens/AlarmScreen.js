@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 import { Audio } from "expo-av";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
+
+import { useAppContext } from "../hook/AppContext.js";
 
 const voiceFiles = {
   1: require("../voice/voice1.mp3"),
@@ -27,11 +29,7 @@ const voiceFiles = {
 
 const AlarmScreen = ({ navigation }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [alarms, setAlarms] = useState([
-    { time: new Date(), isActive: false },
-    { time: new Date(), isActive: false },
-    { time: new Date(), isActive: false },
-  ]);
+  const { alarms, setAlarms } = useAppContext();
   const [showPicker, setShowPicker] = useState(false);
   const [sound, setSound] = useState();
   const [selectedAlarmIndex, setSelectedAlarmIndex] = useState(0);
