@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Button, StyleSheet, Image } from "react-native";
 import { Icon } from "react-native-elements";
+import * as Animatable from "react-native-animatable";
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -15,12 +16,15 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.contents}>
-        <Image source={require("../assets/favicon.png")} style={styles.icon} />
+        <Image source={require("../assets/arr_lert.png")} style={styles.icon} />
         <Image
-          source={require("../assets/girl1.png")}
+          source={require("../assets/girl3.gif")}
           style={styles.character}
         />
-        <Image source={require("../assets/favicon.png")} style={styles.icon} />
+        <Image
+          source={require("../assets/arr_right.png")}
+          style={styles.icon}
+        />
       </View>
     </View>
   );
@@ -30,6 +34,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+    backgroundColor: "#F4F4F4",
   },
   bar: {
     flex: 0,
@@ -44,8 +49,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   character: {
-    width: 300,
-    height: 500,
+    flex: 1,
+    resizeMode: "contain", // 修正: 縦横比を保持しながら親要素に収まるように
   },
   icon: {
     width: 25,
