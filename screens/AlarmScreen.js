@@ -118,7 +118,7 @@ const AlarmScreen = ({ navigation }) => {
           clearInterval(intervalId);
           setShowPopup(false);
           stopAlarm();
-        }, 59999);
+        }, 59990);
 
         // stopAlarm() を呼ぶために intervalId を state に保存
         setAlarmIntervalId(intervalId);

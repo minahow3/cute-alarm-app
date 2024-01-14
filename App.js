@@ -9,6 +9,8 @@ import HistoryScreen from "./screens/HistoryScreen";
 import AlarmScreen from "./screens/AlarmScreen";
 import ConfigScreen from "./screens/ConfigScreen";
 
+import BGMPlayer from "./hook/BGMPlayer";
+
 import { AppProvider } from "./hook/AppContext.js";
 
 const Tab = createMaterialTopTabNavigator();
@@ -34,6 +36,7 @@ function TopTab() {
 export default function App() {
   return (
     <AppProvider>
+      <BGMPlayer />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="TopTab" component={TopTab} />

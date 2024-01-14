@@ -1,20 +1,42 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, SafeAreaView } from "react-native";
+// config.js
+import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import Slider from "@react-native-community/slider";
+import { useAppContext } from "../hook/AppContext";
 
-const HomeScreen = ({ navigation }) => {
-  console.log();
+const ConfigScreen = () => {
+  const { bgmVolume, setBgmVolume } = useAppContext();
+
+  const handleVolumeChange = (value) => {
+    // 音量の変更
+    setBgmVolume(value);
+  };
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white",
-      }}
-    >
-      <Button title="Homeへ" onPress={() => navigation.navigate("Home")} />
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text>背景音楽の音量</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={1}
+        step={0.1}
+        value={bgmVolume}
+        onValueChange={handleVolumeChange}
+      />
+    </View>
   );
 };
 
-export default HomeScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slider: {
+    width: 200,
+    height: 40,
+  },
+});
+
+export default ConfigScreen;
