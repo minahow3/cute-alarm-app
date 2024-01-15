@@ -15,7 +15,11 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.contents}>
-        <Image source={require("../assets/arr_lert.png")} style={styles.icon} />
+        <Image
+          source={require("../assets/arr_lert.png")}
+          style={styles.icon}
+          onAnimatedValueUpdate={() => {}}
+        />
         <Image
           source={require("../assets/girl3.gif")}
           style={styles.character}
@@ -23,6 +27,7 @@ const HomeScreen = ({ navigation }) => {
         <Image
           source={require("../assets/arr_right.png")}
           style={styles.icon}
+          onAnimatedValueUpdate={() => {}}
         />
       </View>
     </View>

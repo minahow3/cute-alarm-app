@@ -4,10 +4,13 @@ import React, { createContext, useContext, useState } from "react";
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 時刻を 0:00 に設定
+
   const [alarms, setAlarms] = useState([
-    { time: new Date(), isActive: false },
-    { time: new Date(), isActive: false },
-    { time: new Date(), isActive: false },
+    { time: new Date(today), isActive: false },
+    { time: new Date(today), isActive: false },
+    { time: new Date(today), isActive: false },
   ]);
 
   const [markedDates, setMarkedDates] = useState({});

@@ -78,13 +78,18 @@ const AlarmScreen = ({ navigation }) => {
 
   // アラームのON/OFF変更
   const toggleAlarm = (index) => {
+    // editedAlarmIndexの初期値を設定
+    if (editedAlarmIndex === null) {
+      setEditedAlarmIndex(index);
+    }
+
     const updatedAlarms = [...alarms];
     updatedAlarms[index].isActive = !updatedAlarms[index].isActive;
     setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
     console.log(
       "アラームON/OFF変更:",
-      alarms[editedAlarmIndex],
-      alarms[editedAlarmIndex].time
+      updatedAlarms[index], // こちらを修正
+      updatedAlarms[index].time
     );
   };
 

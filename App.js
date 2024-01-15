@@ -42,8 +42,7 @@ export default function App() {
       <BGMPlayer />
       <NavigationContainer>
         <Stack.Navigator
-          screenOptions={{ headerShown: false }}
-          mode="modal" // モーダルモードを設定
+          screenOptions={{ headerShown: false, presentation: "modal" }}
         >
           <Stack.Screen name="TopTab" component={TopTab} />
           <Stack.Screen name="Config" component={ConfigScreen} />
