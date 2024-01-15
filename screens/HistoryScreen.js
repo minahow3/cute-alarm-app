@@ -114,6 +114,7 @@ const HistoryScreen = ({ route }) => {
       <View style={styles.calendarContainer}>
         <Calendar
           markedDates={markedDates}
+          onAnimatedValueUpdate={() => {}}
           // その他のプロパティ
         />
       </View>
