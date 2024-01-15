@@ -1,3 +1,4 @@
+//AlarmScreen.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   View,
@@ -67,7 +68,7 @@ const AlarmScreen = ({ navigation }) => {
   const handleDateChange = (event, date) => {
     const updatedAlarms = [...alarms];
     updatedAlarms[editedAlarmIndex].time = date;
-    setAlarms(updatedAlarms);
+    setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
   };
   const handleSave = () => {
     hideDateTimePicker();
@@ -75,10 +76,11 @@ const AlarmScreen = ({ navigation }) => {
     console.log("保存されました:", alarms[editedAlarmIndex].time);
   };
 
+  // アラームのON/OFF変更
   const toggleAlarm = (index) => {
     const updatedAlarms = [...alarms];
     updatedAlarms[index].isActive = !updatedAlarms[index].isActive;
-    setAlarms(updatedAlarms);
+    setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
     console.log(
       "アラームON/OFF変更:",
       alarms[editedAlarmIndex],

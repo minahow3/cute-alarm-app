@@ -9,7 +9,7 @@ const ConfigScreen = () => {
 
   const handleVolumeChange = (value) => {
     // 音量の変更
-    setBgmVolume(value);
+    // setBgmVolume(value);
   };
 
   return (

@@ -18,18 +18,21 @@ const Stack = createStackNavigator();
 
 function TopTab() {
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        tabBarStyle: {
-          height: 60,
-        },
-      }}
-    >
-      <Tab.Screen name="History" component={HistoryScreen} />
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Alarm" component={AlarmScreen} />
-    </Tab.Navigator>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          tabBarPosition: "bottom", // 下に表示
+          tabBarStyle: {
+            height: 60,
+          },
+        }}
+      >
+        <Tab.Screen name="History" component={HistoryScreen} />
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Alarm" component={AlarmScreen} />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -38,7 +41,10 @@ export default function App() {
     <AppProvider>
       <BGMPlayer />
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+          mode="modal" // モーダルモードを設定
+        >
           <Stack.Screen name="TopTab" component={TopTab} />
           <Stack.Screen name="Config" component={ConfigScreen} />
         </Stack.Navigator>

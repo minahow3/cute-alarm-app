@@ -14,10 +14,11 @@ const BGMPlayer = () => {
 
         await soundObject.playAsync();
 
-        // BGM の再生が終了するまで待機
-        await soundObject.setOnPlaybackStatusUpdate(async (status) => {
+        // BGM の再生が終了したときに再生を再開
+        soundObject.setOnPlaybackStatusUpdate(async (status) => {
           if (status.didJustFinish) {
-            await soundObject.unloadAsync();
+            // 再生が終了した場合、再度再生を開始
+            await soundObject.replayAsync();
           }
         });
       } catch (error) {
