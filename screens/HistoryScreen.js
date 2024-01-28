@@ -6,13 +6,49 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { Calendar } from "react-native-calendars";
+import { LocaleConfig, CalendarList } from "react-native-calendars";
 import { Audio } from "expo-av";
 import { useAppContext } from "../hook/AppContext.js";
 
+// react-native-calendarsの月の表示を左端に寄せるための設定（jaが日本語設定）
+LocaleConfig.locales["ja"] = {
+  monthNames: [
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
+  ],
+  monthNamesShort: [
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
+  ],
+  dayNames: ["日", "月", "火", "水", "木", "金", "土"],
+  dayNamesShort: ["日", "月", "火", "水", "木", "金", "土"],
+  today: "今日",
+};
+LocaleConfig.defaultLocale = "ja";
+
 const HistoryScreen = ({ route }) => {
-  console.log(route);
-  const { markedDates, setMarkedDates, phrases, setPhrases } = useAppContext(); // AppContextからデータを取得
+  // AppContextからデータを取得
+  const { markedDates, setMarkedDates, phrases, setPhrases } = useAppContext();
 
   useEffect(() => {
     // アラームが止まった情報があればカレンダーを更新
@@ -24,6 +60,7 @@ const HistoryScreen = ({ route }) => {
     }
   }, [route.params?.alarmStopped, route.params?.playedPhraseIndex]);
 
+  // カレンダーを更新する関数
   const updateCalendar = () => {
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}-${(
@@ -31,20 +68,23 @@ const HistoryScreen = ({ route }) => {
     )
       .toString()
       .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
-    // カレンダーの日付を更新
+
+    // マークされた日付を更新
     setMarkedDates((prevMarkedDates) => {
-      return {
+      const updatedMarkedDates = {
         ...prevMarkedDates,
-        [formattedDate]: { selected: true, marked: true, dotColor: "green" },
+        [formattedDate]: {
+          selected: true,
+          marked: true,
+          selectedColor: "#facfde",
+        },
       };
+
+      return updatedMarkedDates;
     });
   };
 
-  //   const markedDates = {
-  //   "2023-12-01": { selected: true, marked: true, dotColor: "green" }, // 今日
-  //   "2023-11-30": { selected: true, marked: true, dotColor: "green" }, // 昨日
-  // };
-
+  // セリフの達成状態を更新する関数
   const updatePhraseAchieved = (playedPhraseIndex) => {
     if (playedPhraseIndex !== null && playedPhraseIndex !== undefined) {
       const updatedPhrases = [...phrases];
@@ -59,6 +99,7 @@ const HistoryScreen = ({ route }) => {
     }
   };
 
+  // セリフアイテムを描画する関数
   const renderPhraseItem = ({ item }) => (
     <TouchableOpacity
       style={styles.phraseItem}
@@ -68,10 +109,12 @@ const HistoryScreen = ({ route }) => {
     </TouchableOpacity>
   );
 
+  // セリフが押されたときの処理
   const handlePhrasePress = (voiceIndex, isAchieved) => {
     playAudio(voiceIndex, isAchieved);
   };
 
+  // 音声を再生する関数
   const playAudio = async (voiceIndex, isAchieved) => {
     // achieved が false の場合は再生しない
     if (!isAchieved) {
@@ -112,10 +155,32 @@ const HistoryScreen = ({ route }) => {
     <View style={styles.container}>
       {/* 上部：カレンダー */}
       <View style={styles.calendarContainer}>
-        <Calendar
+        <Text style={styles.calendarText}>カレンダー</Text>
+        <CalendarList
           markedDates={markedDates}
           onAnimatedValueUpdate={() => {}}
-          // その他のプロパティ
+          showScrollIndicator={true}
+          showSixWeeks={true}
+          hideExtraDays={false}
+          calendarHeight={170}
+          horizontal={true}
+          pastScrollRange={3}
+          futureScrollRange={3}
+          monthFormat={"yyyy年M月"}
+          theme={{
+            weekVerticalMargin: 1.2,
+          }}
+          onVisibleMonthsChange={(months) => {
+            // 月が切り替わったときに呼び出す
+            console.log("表示されている月が変更されました:", months);
+            updateCalendar();
+          }}
+          style={{
+            backgroundColor: "white",
+            width: "90%",
+            margin: 20,
+            borderRadius: 10,
+          }}
         />
       </View>
 
@@ -126,9 +191,10 @@ const HistoryScreen = ({ route }) => {
             data={phrases}
             renderItem={renderPhraseItem}
             keyExtractor={(item) => item.id.toString()}
+            style={styles.flatList}
           />
         ) : (
-          <Text>獲得したセリフがありません</Text>
+          <Text style={styles.noPhrasesText}>獲得したセリフがありません</Text>
         )}
       </View>
     </View>
@@ -138,19 +204,27 @@ const HistoryScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#FFEBEB",
   },
   calendarContainer: {
-    // カレンダーコンポーネントのスタイル
+    width: "100%",
+  },
+  calendarText: {
+    marginLeft: 20,
+    marginTop: 20,
   },
   phrasesContainer: {
     flex: 1,
+    margin: 5,
     padding: 10,
   },
   phraseItem: {
+    fontSize: 40,
     padding: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    marginBottom: 10,
+    backgroundColor: "white",
+    marginBottom: 15,
+    borderRadius: 10,
   },
 });
 

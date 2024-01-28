@@ -13,7 +13,10 @@ export const AppProvider = ({ children }) => {
     { time: new Date(today), isActive: false },
   ]);
 
-  const [markedDates, setMarkedDates] = useState({});
+  const [markedDates, setMarkedDates] = useState({
+    "2024-01-01": { selected: true, marked: true, selectedColor: "#facfde" }, // 今日
+    "2023-11-30": { selected: true, marked: true, selectedColor: "#facfde" }, // 昨日
+  });
   const [phrases, setPhrases] = useState([
     {
       id: 1,
