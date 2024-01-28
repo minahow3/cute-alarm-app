@@ -8,12 +8,17 @@ import {
   Animated,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Audio } from "expo-av";
 
 const HomeScreen = ({ navigation }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bounceValue] = useState(new Animated.Value(1));
 
-  const handleCharacterPress = () => {
+  // 効果音のファイルパス
+  const motionSoundFile = require("../voice/motion.mp3");
+  const motionSound = new Audio.Sound();
+
+  const handleCharacterPress = async () => {
     // バウンスアニメーション
     Animated.sequence([
       Animated.timing(bounceValue, {
@@ -27,6 +32,14 @@ const HomeScreen = ({ navigation }) => {
         useNativeDriver: false,
       }),
     ]).start();
+
+    // 効果音を再生
+    try {
+      await motionSound.loadAsync(motionSoundFile);
+      await motionSound.playAsync();
+    } catch (error) {
+      console.error("効果音の再生中にエラーが発生しました", error);
+    }
   };
 
   useEffect(() => {
@@ -37,7 +50,10 @@ const HomeScreen = ({ navigation }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+  const currentHours = currentTime.getHours().toString().padStart(2, "0");
+  const currentMinutes = currentTime.getMinutes().toString().padStart(2, "0");
+
+  const formattedTime = `${currentHours}:${currentMinutes}`;
   const formattedDate = `${currentTime.toDateString()}`;
 
   return (
@@ -59,14 +75,14 @@ const HomeScreen = ({ navigation }) => {
           style={styles.icon}
         />
       </View>
-      <View style={styles.bar}>
+      {/* <View style={styles.bar}>
         <MaterialIcons
           name="settings"
           size={30}
           style={{ backgroundColor: "#FFEBEB" }}
           onPress={() => navigation.navigate("Config")}
         />
-      </View>
+      </View> */}
     </View>
   );
 };
