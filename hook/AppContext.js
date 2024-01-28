@@ -13,51 +13,56 @@ export const AppProvider = ({ children }) => {
     { time: new Date(today), isActive: false },
   ]);
 
-  const [markedDates, setMarkedDates] = useState({
-    "2024-01-01": { selected: true, marked: true, selectedColor: "#facfde" }, // 今日
-    "2023-11-30": { selected: true, marked: true, selectedColor: "#facfde" }, // 昨日
-  });
+  const [markedDates, setMarkedDates] = useState({});
   const [phrases, setPhrases] = useState([
     {
       id: 1,
-      text: "おはようございます。今日も一緒に素敵な1日を迎えましょう。",
+      text: "おーい、朝だよ。そろそろ起きて!",
       achieved: true,
     },
-    { id: 2, text: "おはよう。なんでそんなに笑ってるの？", achieved: false },
     {
-      id: 3,
-      text: "すごいね。今日も目覚ましを1回で止めてくれてありがとう。",
+      id: 2,
+      text: "おはよう！今日の天気確認した？お出かけの時は気を付けてね。",
       achieved: false,
     },
-    { id: 4, text: "今日も君の笑顔とっても素敵だね。", achieved: false },
+    {
+      id: 3,
+      text: "おっはよう～～。今日も1日がんばろうー！",
+      achieved: false,
+    },
+    {
+      id: 4,
+      text: "おはよう！ふふ、すごい寝ぐせ。可愛いね。",
+      achieved: false,
+    },
     {
       id: 5,
-      text: "君の笑顔は私の元気の源なんだよ。おはよう。",
+      text: "おはーー！んん？寝ぼけてるの？わたしだよ。おはよう！",
       achieved: false,
     },
     {
       id: 6,
-      text: "おはよう。今日の予定はもう考えてる？なにしようね。",
+      text: "ねぇ……ねーえ。起きて。そろそろ起きてよ。おーきーてーよーー！！",
       achieved: false,
     },
     {
       id: 7,
-      text: "小さな一歩も大事だよね。君ならきっとできるはず！",
+      text: "おはよう。今日の予定はもう考えてる？なにしようね？",
       achieved: false,
     },
     {
       id: 8,
-      text: "君の笑顔は今日もきっとみんなを笑顔にできます。",
+      text: "遅刻しちゃっていいの？ダメでしょ？！早く起きるの！",
       achieved: false,
     },
     {
       id: 9,
-      text: "成功は小さな積み重ねから。今日も一歩進んでいこう。",
+      text: "おはよう！起きて！あれ？寝てる？よしっ、こちょこちょタイムだ！",
       achieved: false,
     },
     {
       id: 10,
-      text: "おはよう！今日の天気確認した？お出かけの時は気を付けてね。",
+      text: "おーはーようっ！ねー起きてー？・・起きないとチューしちゃうぞっ！",
       achieved: false,
     },
   ]);
