@@ -1,5 +1,11 @@
 //AlarmScreen.js
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  useRef,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import {
   View,
   Text,
@@ -8,6 +14,7 @@ import {
   StyleSheet,
   Image,
   Button,
+  ScrollView,
 } from "react-native";
 import { Audio } from "expo-av";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -38,6 +45,7 @@ const AlarmScreen = ({ navigation }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [alarmIntervalId, setAlarmIntervalId] = useState(null);
   const [randomIndex, setRandomIndex] = useState(null);
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
     // 現在時刻の更新とアラームのチェックを1秒ごとに行う
@@ -58,6 +66,13 @@ const AlarmScreen = ({ navigation }) => {
   const showDateTimePicker = (index) => {
     setShowPicker(true);
     setEditedAlarmIndex(index);
+
+    // DateTimePickerがレイアウトされた後に末尾にスクロール
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }
+    }, 0);
   };
 
   const hideDateTimePicker = () => {
@@ -165,42 +180,34 @@ const AlarmScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView ref={scrollViewRef} style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>アラーム</Text>
-        <Text style={styles.currentTimeText}>
-          現在の時刻:{" "}
-          {currentTime.toLocaleTimeString("ja-JP", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          })}
-        </Text>
+        <Text style={styles.headerText}>Alarm</Text>
       </View>
       <View style={styles.alarmsContainer}>
         {alarms.map((alarm, index) => (
-          <View key={index} style={styles.alarmItem}>
-            <Text style={styles.alarmTimeText}>
-              アラーム {index + 1} :{" "}
-              {alarm.time.toLocaleTimeString("ja-JP", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </Text>
-            <TouchableOpacity onPress={() => showDateTimePicker(index)}>
-              <Image
-                source={require("../assets/edit.png")}
-                style={styles.editIcon}
-              />
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => showDateTimePicker(index)}
+            style={styles.alarmItem}
+          >
+            <View style={styles.alarmTextContainer}>
+              <Text style={styles.alarmTimeText}>
+                {alarm.time.toLocaleTimeString("ja-JP", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </Text>
+              <Text style={styles.alarmText}>アラーム</Text>
+            </View>
             <Switch
               value={alarm.isActive}
               onValueChange={() => toggleAlarm(index)}
-              thumbColor={alarm.isActive ? "white" : "white"}
-              trackColor={{ false: "#8E8E93", true: "#007AFF" }}
+              thumbColor={alarm.isActive ? "#E10050" : "white"} // サムの色
+              trackColor={{ false: "#8E8E93", true: "#EF7FA7" }} // トラックの色
               ios_backgroundColor="#8E8E93"
+              style={styles.materialSwitch}
             />
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
       {showPicker && (
@@ -228,7 +235,7 @@ const AlarmScreen = ({ navigation }) => {
           </View>
         </Modal>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -253,14 +260,41 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   alarmItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: "row", // コンポーネントを横に配置する
+    justifyContent: "space-between", // 左右にスペースを空ける
     alignItems: "center",
     margin: 15,
+    paddingBottom: 10,
+    borderBottomWidth: 1, // 一本の線を追加
+    borderBottomColor: "#BEBEBE", // 線の色を指定
+    paddingHorizontal: 10, // 左右の余白を追加
+  },
+
+  alarmTimeTextContainer: {
+    flexDirection: "column", // 垂直方向に表示
   },
   alarmTimeText: {
-    fontSize: 18,
+    fontSize: 48,
+    // borderWidth: 1,
+    // borderColor: "black",
   },
+  alarmTextContainer: {
+    width: "75%",
+    // borderWidth: 1,
+    // borderColor: "blue",
+    flexDirection: "column", // 垂直方向に表示
+    marginLeft: 10, // 時間と"アラーム"文字の間にスペースを追加
+  },
+  alarmText: {
+    fontSize: 16, // テキストのフォントサイズを指定
+    color: "282E31",
+  },
+
+  materialSwitch: {
+    transform: [{ scaleX: 1 }, { scaleY: 1 }], // サイズを変更
+    marginLeft: 10, // マージンを追加
+  },
+
   editIcon: {
     width: 20,
     height: 20,
