@@ -75,14 +75,14 @@ const HomeScreen = ({ navigation }) => {
           style={styles.icon}
         />
       </View>
-      {/* <View style={styles.bar}>
+      <View style={styles.bar}>
         <MaterialIcons
           name="settings"
           size={30}
           style={{ backgroundColor: "#FFEBEB" }}
           onPress={() => navigation.navigate("Config")}
         />
-      </View> */}
+      </View>
     </View>
   );
 };

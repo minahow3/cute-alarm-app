@@ -1,44 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Audio } from "expo-av";
+import { useAppContext } from "../hook/AppContext"; // コンテキストをインポート
 
 const BGMPlayer = () => {
+  const { bgmVolume } = useAppContext(); // コンテキストから bgmVolume を取得
+  const soundObjectRef = useRef();
+
   useEffect(() => {
     const playBackgroundMusic = async () => {
-      const soundObject = new Audio.Sound();
+      if (soundObjectRef.current) {
+        // すでにインスタンスが存在する場合、アンロード
+        await soundObjectRef.current.unloadAsync();
+      }
+
+      // 新しい Audio.Sound インスタンスを作成
+      soundObjectRef.current = new Audio.Sound();
 
       try {
-        await soundObject.loadAsync(require("../voice/bgm.mp3"));
+        // BGM のロード
+        await soundObjectRef.current.loadAsync(require("../voice/bgm.mp3"));
 
-        // 音量を設定（例: 0.5は半分の音量）
-        await soundObject.setVolumeAsync(0.1);
+        // 音量の設定
+        await soundObjectRef.current.setVolumeAsync(bgmVolume);
 
-        await soundObject.playAsync();
+        // BGM の再生
+        await soundObjectRef.current.playAsync();
 
         // BGM の再生が終了したときに再生を再開
-        soundObject.setOnPlaybackStatusUpdate(async (status) => {
+        soundObjectRef.current.setOnPlaybackStatusUpdate(async (status) => {
           if (status.didJustFinish) {
             // 再生が終了した場合、再度再生を開始
-            await soundObject.replayAsync();
+            await soundObjectRef.current.replayAsync();
           }
         });
       } catch (error) {
-        console.error("BGM の再生中にエラーが発生しました", error);
+        console.error("BGM の制御中にエラーが発生しました", error);
       }
     };
 
     playBackgroundMusic();
 
     // コンポーネントがアンマウントされた時にクリーンアップ
-    return () => {
-      Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_MIX_WITH_OTHERS,
-        playsInSilentModeIOS: true,
-        shouldDuckAndroid: true,
-        interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
-      });
+    return async () => {
+      if (soundObjectRef.current) {
+        await soundObjectRef.current.stopAsync();
+        await soundObjectRef.current.unloadAsync();
+      }
     };
-  }, []);
+  }, [bgmVolume]); // bgmVolume の変更を監視
 
   return null; // BGMPlayer コンポーネント自体は何もレンダリングしない
 };

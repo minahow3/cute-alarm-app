@@ -67,6 +67,8 @@ export const AppProvider = ({ children }) => {
     },
   ]);
 
+  const [bgmVolume, setBgmVolume] = useState(0.5);
+
   const contextValue = {
     alarms,
     setAlarms,
@@ -74,6 +76,8 @@ export const AppProvider = ({ children }) => {
     setMarkedDates,
     phrases,
     setPhrases,
+    bgmVolume, // 追加
+    setBgmVolume, // 追加
   };
 
   return (

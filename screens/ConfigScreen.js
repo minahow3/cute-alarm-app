@@ -9,9 +9,8 @@ const ConfigScreen = () => {
 
   const handleVolumeChange = (value) => {
     // 音量の変更
-    // setBgmVolume(value);
+    setBgmVolume(value);
   };
-
   return (
     <View style={styles.container}>
       <Text>背景音楽の音量</Text>
@@ -19,7 +18,7 @@ const ConfigScreen = () => {
         style={styles.slider}
         minimumValue={0}
         maximumValue={1}
-        step={0.1}
+        step={0.2}
         value={bgmVolume}
         onValueChange={handleVolumeChange}
       />
