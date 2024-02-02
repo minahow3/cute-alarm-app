@@ -84,6 +84,18 @@ const AlarmScreen = ({ navigation }) => {
     const updatedAlarms = [...alarms];
     updatedAlarms[editedAlarmIndex].time = date;
     setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
+    console.log(
+      "アラームON/OFF変更:",
+      updatedAlarms[index], // こちらを修正
+      updatedAlarms[index].time
+    );
+
+    // 追加: ログを出力
+    console.log(
+      `アラーム ${index + 1} を${
+        updatedAlarms[index].isActive ? "有効化" : "無効化"
+      }しました。`
+    );
   };
   const handleSave = () => {
     hideDateTimePicker();
@@ -124,7 +136,6 @@ const AlarmScreen = ({ navigation }) => {
 
         // ランダムなインデックスを取得
         const newIndex = Math.floor(Math.random() * 10) + 1; // 10個の音声ファイルがあると仮定
-        console.log(newIndex);
 
         setRandomIndex(newIndex - 1);
         // ランダムに選択された音声ファイルを再生
@@ -144,6 +155,8 @@ const AlarmScreen = ({ navigation }) => {
 
         // stopAlarm() を呼ぶために intervalId を state に保存
         setAlarmIntervalId(intervalId);
+
+        console.log(`アラーム ${index + 1} が発動しました。`);
       }
     }
   };
@@ -169,6 +182,7 @@ const AlarmScreen = ({ navigation }) => {
         alarmStopped: true,
         playedPhraseIndex: randomIndex,
       });
+      console.log(`アラームが停止しました。`);
     }
   };
 

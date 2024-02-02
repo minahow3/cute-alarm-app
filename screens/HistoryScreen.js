@@ -54,7 +54,10 @@ const HistoryScreen = ({ route }) => {
     // アラームが止まった情報があればカレンダーを更新
     if (route.params?.alarmStopped) {
       // playedPhraseIndexはアラーム画面で再生されたセリフのindexを示す
-      console.log(route.params?.playedPhraseIndex);
+      console.log(
+        "アラームが停止されました。再生されたセリフのindex:",
+        route.params?.playedPhraseIndex
+      );
       updatePhraseAchieved(route.params?.playedPhraseIndex);
       updateCalendar(); // カレンダー更新関数の呼び出し
     }
@@ -79,6 +82,7 @@ const HistoryScreen = ({ route }) => {
           selectedColor: "#facfde",
         },
       };
+      console.log("カレンダーが更新されました。更新された日付:", formattedDate);
 
       return updatedMarkedDates;
     });
@@ -95,6 +99,7 @@ const HistoryScreen = ({ route }) => {
       ) {
         updatedPhrases[playedPhraseIndex].achieved = true;
         setPhrases(updatedPhrases);
+        console.log(`セリフ ${playedPhraseIndex + 1} が達成されました。`);
       }
     }
   };
@@ -122,7 +127,6 @@ const HistoryScreen = ({ route }) => {
     }
 
     try {
-      console.log("playing");
       const voiceFiles = {
         1: require("../voice/voice1.mp3"),
         2: require("../voice/voice2.mp3"),

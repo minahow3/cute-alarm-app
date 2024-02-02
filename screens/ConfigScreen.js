@@ -10,12 +10,18 @@ const ConfigScreen = () => {
   const handleVolumeChange = (value) => {
     // スライダーの値を更新
     setSliderValue(value);
+
+    // 追加: ログを出力
+    console.log(`スライダーの値が変更されました。新しい値: ${value}`);
   };
 
   const handleVolumeChangeComplete = async () => {
     try {
       // 音量の変更
       setBgmVolume(sliderValue);
+
+      // 追加: ログを出力
+      console.log("背景音楽の音量が変更されました。新しい値:", sliderValue);
     } catch (error) {
       console.error("音量の変更中にエラーが発生しました:", error);
     }
