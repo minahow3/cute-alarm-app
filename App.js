@@ -1,5 +1,5 @@
-import * as React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { SafeAreaView, StyleSheet, Animated, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -8,36 +8,33 @@ import HomeScreen from "./screens/HomeScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import AlarmScreen from "./screens/AlarmScreen";
 import ConfigScreen from "./screens/ConfigScreen";
-
 import BGMPlayer from "./hook/BGMPlayer";
-
 import { AppProvider } from "./hook/AppContext.js";
+
+LogBox.ignoreAllLogs();
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 function TopTab() {
-  // アイコンに枠を付けるスタイル
+  const routes = {
+    History: "History", // 実際のルート名に置き換えてください
+    Home: "Home",
+    Alarm: "Alarm",
+  };
+
   const iconStyle = {
     padding: 0,
-    // borderWidth: 1, // 枠の幅
-    // borderColor: "black", // 枠の色
   };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName={routes.Home}
         tabBarPosition="bottom"
-        swipeEnabled={true}
-        tabBarOptions={{
-          style: {
-            height: 60, // タブバーの高さを変更
-          },
-          showLabel: false, // タブのテキストを非表示にする
-        }}
         tabBarScrollEnabled={true}
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
+          tabBarIcon: ({ color }) => {
             let iconName;
 
             if (route.name === "History") {
@@ -48,7 +45,6 @@ function TopTab() {
               iconName = "alarm";
             }
 
-            // ここで icon を表示します
             return (
               <MaterialIcons
                 name={iconName}
@@ -58,21 +54,28 @@ function TopTab() {
               />
             );
           },
-          tabBarLabel: "", // タブのテキストを非表示にする
+          tabBarLabel: "",
+          swipeEnabled: true,
+          animationEnabled: false,
+
+          style: {
+            height: 60,
+          },
+          showLabel: false,
         })}
       >
         <Tab.Screen
-          name="History"
+          name={routes.History}
           component={HistoryScreen}
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="Home"
+          name={routes.Home}
           component={HomeScreen}
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="Alarm"
+          name={routes.Alarm}
           component={AlarmScreen}
           options={{ headerShown: false }}
         />
@@ -83,7 +86,6 @@ function TopTab() {
 
 const styles = StyleSheet.create({
   iconStyle: {
-    // flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },

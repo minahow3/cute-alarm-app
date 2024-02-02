@@ -1,16 +1,26 @@
-// config.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
 import { useAppContext } from "../hook/AppContext";
 
 const ConfigScreen = () => {
   const { bgmVolume, setBgmVolume } = useAppContext();
+  const [sliderValue, setSliderValue] = useState(bgmVolume);
 
   const handleVolumeChange = (value) => {
-    // 音量の変更
-    setBgmVolume(value);
+    // スライダーの値を更新
+    setSliderValue(value);
   };
+
+  const handleVolumeChangeComplete = async () => {
+    try {
+      // 音量の変更
+      setBgmVolume(sliderValue);
+    } catch (error) {
+      console.error("音量の変更中にエラーが発生しました:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text>背景音楽の音量</Text>
@@ -19,8 +29,9 @@ const ConfigScreen = () => {
         minimumValue={0}
         maximumValue={1}
         step={0.2}
-        value={bgmVolume}
+        value={sliderValue}
         onValueChange={handleVolumeChange}
+        onSlidingComplete={handleVolumeChangeComplete}
       />
     </View>
   );

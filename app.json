@@ -11,6 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "development": {
+      "logLevel": "info"
+    },
+    "production": {
+      "logLevel": "warn"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true

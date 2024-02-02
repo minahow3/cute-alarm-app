@@ -1,22 +1,23 @@
+// BGMPlayer.js
 import React, { useEffect, useRef } from "react";
 import { Audio } from "expo-av";
-import { useAppContext } from "../hook/AppContext"; // コンテキストをインポート
+import { useAppContext } from "../hook/AppContext";
 
 const BGMPlayer = () => {
-  const { bgmVolume } = useAppContext(); // コンテキストから bgmVolume を取得
+  const { bgmVolume } = useAppContext();
   const soundObjectRef = useRef();
 
   useEffect(() => {
     const playBackgroundMusic = async () => {
-      if (soundObjectRef.current) {
-        // すでにインスタンスが存在する場合、アンロード
-        await soundObjectRef.current.unloadAsync();
-      }
-
-      // 新しい Audio.Sound インスタンスを作成
-      soundObjectRef.current = new Audio.Sound();
-
       try {
+        if (soundObjectRef.current) {
+          // すでにインスタンスが存在する場合、アンロード
+          await soundObjectRef.current.unloadAsync();
+        }
+
+        // 新しい Audio.Sound インスタンスを作成
+        soundObjectRef.current = new Audio.Sound();
+
         // BGM のロード
         await soundObjectRef.current.loadAsync(require("../voice/bgm.mp3"));
 
@@ -42,9 +43,13 @@ const BGMPlayer = () => {
 
     // コンポーネントがアンマウントされた時にクリーンアップ
     return async () => {
-      if (soundObjectRef.current) {
-        await soundObjectRef.current.stopAsync();
-        await soundObjectRef.current.unloadAsync();
+      try {
+        if (soundObjectRef.current) {
+          await soundObjectRef.current.stopAsync();
+          await soundObjectRef.current.unloadAsync();
+        }
+      } catch (error) {
+        console.error("BGM のアンロード中にエラーが発生しました", error);
       }
     };
   }, [bgmVolume]); // bgmVolume の変更を監視

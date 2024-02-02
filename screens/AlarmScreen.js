@@ -187,6 +187,7 @@ const AlarmScreen = ({ navigation }) => {
       <View style={styles.alarmsContainer}>
         {alarms.map((alarm, index) => (
           <TouchableOpacity
+            key={index} // ここでkeyを指定
             onPress={() => showDateTimePicker(index)}
             style={styles.alarmItem}
           >
@@ -202,7 +203,6 @@ const AlarmScreen = ({ navigation }) => {
             <Switch
               value={alarm.isActive}
               onValueChange={() => toggleAlarm(index)}
-              thumbColor={alarm.isActive ? "#E10050" : "white"} // サムの色
               trackColor={{ false: "#8E8E93", true: "#EF7FA7" }} // トラックの色
               ios_backgroundColor="#8E8E93"
               style={styles.materialSwitch}
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   },
   alarmText: {
     fontSize: 16, // テキストのフォントサイズを指定
-    color: "282E31",
+    color: "#282E31",
   },
 
   materialSwitch: {
