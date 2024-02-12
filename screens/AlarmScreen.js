@@ -32,7 +32,7 @@ const voiceFiles = {
   7: require("../voice/voice7.mp3"),
   8: require("../voice/voice8.mp3"),
   9: require("../voice/voice9.mp3"),
-  10: require("../voice/voice10.mp3"),
+  // 10: require("../voice/voice10.mp3"),
 };
 
 const AlarmScreen = ({ navigation }) => {
@@ -82,21 +82,22 @@ const AlarmScreen = ({ navigation }) => {
   // アラーム更新
   const handleDateChange = (event, date) => {
     const updatedAlarms = [...alarms];
-    updatedAlarms[editedAlarmIndex].time = date;
+    updatedAlarms[selectedAlarmIndex].time = date;
     setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
     console.log(
       "アラームON/OFF変更:",
-      updatedAlarms[index], // こちらを修正
-      updatedAlarms[index].time
+      updatedAlarms[selectedAlarmIndex], // editedAlarmIndex を使用する
+      updatedAlarms[selectedAlarmIndex].time
     );
 
     // 追加: ログを出力
     console.log(
-      `アラーム ${index + 1} を${
-        updatedAlarms[index].isActive ? "有効化" : "無効化"
+      `アラーム ${selectedAlarmIndex + 1} を${
+        updatedAlarms[selectedAlarmIndex].isActive ? "有効化" : "無効化"
       }しました。`
     );
   };
+
   const handleSave = () => {
     hideDateTimePicker();
     // ここでアラームの時間を保存するなどの処理を行う
@@ -121,7 +122,7 @@ const AlarmScreen = ({ navigation }) => {
   };
 
   const checkAlarms = async () => {
-    for (const alarm of alarms) {
+    alarms.forEach((alarm, index) => {
       const alarmTime = alarm.time;
       const currentTime = new Date();
 
@@ -135,7 +136,7 @@ const AlarmScreen = ({ navigation }) => {
         setShowPopup(true); // アラームが鳴っている場合、ポップアップを表示
 
         // ランダムなインデックスを取得
-        const newIndex = Math.floor(Math.random() * 10) + 1; // 10個の音声ファイルがあると仮定
+        const newIndex = Math.floor(Math.random() * 9) + 1; // 9個の音声ファイルがあると仮定
 
         setRandomIndex(newIndex - 1);
         // ランダムに選択された音声ファイルを再生
@@ -158,7 +159,7 @@ const AlarmScreen = ({ navigation }) => {
 
         console.log(`アラーム ${index + 1} が発動しました。`);
       }
-    }
+    });
   };
 
   const playAlarmSound = async (file) => {

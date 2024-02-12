@@ -60,11 +60,11 @@ export const AppProvider = ({ children }) => {
       text: "おはよう！起きて！あれ？寝てる？よしっ、こちょこちょタイムだ！",
       achieved: false,
     },
-    {
-      id: 10,
-      text: "おーはーようっ！ねー起きてー？・・起きないとチューしちゃうぞっ！",
-      achieved: false,
-    },
+    // {
+    //   id: 10,
+    //   text: "おーはーようっ！ねー起きてー？・・起きないとチューしちゃうぞっ！",
+    //   achieved: false,
+    // },
   ]);
 
   const [bgmVolume, setBgmVolume] = useState(0.5);
