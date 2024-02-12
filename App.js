@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import React, { useEffect, useRef } from "react";
 import { SafeAreaView, StyleSheet, Animated, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
