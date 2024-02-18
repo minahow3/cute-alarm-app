@@ -12,7 +12,7 @@ import ConfigScreen from "./screens/ConfigScreen";
 import BGMPlayer from "./hook/BGMPlayer";
 import { AppProvider } from "./hook/AppContext.js";
 
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
