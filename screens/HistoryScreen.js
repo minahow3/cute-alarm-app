@@ -82,7 +82,11 @@ const HistoryScreen = ({ route }) => {
           selectedColor: "#facfde",
         },
       };
-      console.log("カレンダーが更新されました。更新された日付:", formattedDate);
+      console.log(
+        updatedMarkedDates,
+        "カレンダーが更新されました。更新された日付:",
+        formattedDate
+      );
 
       return updatedMarkedDates;
     });

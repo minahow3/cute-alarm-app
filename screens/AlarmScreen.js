@@ -82,18 +82,13 @@ const AlarmScreen = ({ navigation }) => {
   // アラーム更新
   const handleDateChange = (event, date) => {
     const updatedAlarms = [...alarms];
-    updatedAlarms[selectedAlarmIndex].time = date;
+    updatedAlarms[editedAlarmIndex].time = date;
     setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
-    console.log(
-      "アラームON/OFF変更:",
-      updatedAlarms[selectedAlarmIndex], // editedAlarmIndex を使用する
-      updatedAlarms[selectedAlarmIndex].time
-    );
 
     // 追加: ログを出力
     console.log(
-      `アラーム ${selectedAlarmIndex + 1} を${
-        updatedAlarms[selectedAlarmIndex].isActive ? "有効化" : "無効化"
+      `アラーム ${editedAlarmIndex} を${
+        updatedAlarms[editedAlarmIndex].isActive ? "有効化" : "無効化"
       }しました。`
     );
   };
@@ -115,9 +110,9 @@ const AlarmScreen = ({ navigation }) => {
     updatedAlarms[index].isActive = !updatedAlarms[index].isActive;
     setAlarms(updatedAlarms); // setAlarms を使用してステートを更新
     console.log(
-      "アラームON/OFF変更:",
-      updatedAlarms[index], // こちらを修正
-      updatedAlarms[index].time
+      `アラーム ${selectedAlarmIndex} を${
+        updatedAlarms[selectedAlarmIndex].isActive ? "有効化" : "無効化"
+      }しました。`
     );
   };
 
@@ -157,7 +152,7 @@ const AlarmScreen = ({ navigation }) => {
         // stopAlarm() を呼ぶために intervalId を state に保存
         setAlarmIntervalId(intervalId);
 
-        console.log(`アラーム ${index + 1} が発動しました。`);
+        console.log(`アラーム ${index} が発動しました。`);
       }
     });
   };
