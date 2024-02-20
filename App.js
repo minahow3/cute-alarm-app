@@ -1,9 +1,12 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useRef } from "react";
-import { SafeAreaView, StyleSheet, Animated, LogBox } from "react-native";
+import { SafeAreaView, StyleSheet, LogBox } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+// import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { MaterialIcons } from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import HistoryScreen from "./screens/HistoryScreen";
@@ -14,7 +17,8 @@ import { AppProvider } from "./hook/AppContext.js";
 
 // LogBox.ignoreAllLogs();
 
-const Tab = createMaterialTopTabNavigator();
+// const Tab = createMaterialTopTabNavigator();
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function TopTab() {
