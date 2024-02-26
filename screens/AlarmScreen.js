@@ -20,8 +20,7 @@ import { Audio } from "expo-av";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 
-import { useAppContext } from "../hook/AppContext.js";
-
+import { useAppContext, convertStringToDate } from "../hook/AppContext.js";
 const voiceFiles = {
   1: require("../voice/voice1.mp3"),
   2: require("../voice/voice2.mp3"),
@@ -118,7 +117,7 @@ const AlarmScreen = ({ navigation }) => {
 
   const checkAlarms = async () => {
     alarms.forEach((alarm, index) => {
-      const alarmTime = alarm.time;
+      let alarmTime = convertStringToDate(alarm.time);
       const currentTime = new Date();
 
       // アラームの設定された時間（時、分）が現在の時間と一致するかどうかを確認
@@ -197,13 +196,13 @@ const AlarmScreen = ({ navigation }) => {
       <View style={styles.alarmsContainer}>
         {alarms.map((alarm, index) => (
           <TouchableOpacity
-            key={index} // ここでkeyを指定
+            key={index}
             onPress={() => showDateTimePicker(index)}
             style={styles.alarmItem}
           >
             <View style={styles.alarmTextContainer}>
               <Text style={styles.alarmTimeText}>
-                {alarm.time.toLocaleTimeString("ja-JP", {
+                {convertStringToDate(alarm.time).toLocaleTimeString("ja-JP", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -213,7 +212,7 @@ const AlarmScreen = ({ navigation }) => {
             <Switch
               value={alarm.isActive}
               onValueChange={() => toggleAlarm(index)}
-              trackColor={{ false: "#8E8E93", true: "#EF7FA7" }} // トラックの色
+              trackColor={{ false: "#8E8E93", true: "#EF7FA7" }}
               ios_backgroundColor="#8E8E93"
               style={styles.materialSwitch}
             />
@@ -223,7 +222,11 @@ const AlarmScreen = ({ navigation }) => {
       {showPicker && (
         <>
           <DateTimePicker
-            value={alarms[selectedAlarmIndex].time}
+            value={
+              alarms[editedAlarmIndex]
+                ? convertStringToDate(alarms[editedAlarmIndex].time)
+                : new Date()
+            }
             mode="time"
             is24Hour={true}
             display="spinner"

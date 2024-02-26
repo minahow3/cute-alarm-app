@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -13,10 +13,10 @@ import { Audio } from "expo-av";
 const HomeScreen = ({ navigation }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bounceValue] = useState(new Animated.Value(1));
+  const motionSound = useRef(new Audio.Sound()).current; // useRef を使用して motionSound を管理
 
   // 効果音のファイルパス
   const motionSoundFile = require("../voice/motion.mp3");
-  const motionSound = new Audio.Sound();
 
   const handleCharacterPress = async () => {
     // バウンスアニメーション
@@ -35,13 +35,23 @@ const HomeScreen = ({ navigation }) => {
 
     // 効果音を再生
     try {
-      await motionSound.loadAsync(motionSoundFile);
+      // すでにロードされている場合はアンロード
+      if (motionSound._loaded) {
+        await motionSound.unloadAsync();
+      }
+
+      // BGM のロード
+      await motionSound.loadAsync(require("../voice/motion.mp3"));
+
+      // 音量の設定
+      await motionSound.setVolumeAsync(1.0); // 適切な音量を設定
+
+      // 効果音の再生
       await motionSound.playAsync();
     } catch (error) {
       console.error("効果音の再生中にエラーが発生しました", error);
     }
   };
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());

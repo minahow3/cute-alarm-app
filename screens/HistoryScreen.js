@@ -9,6 +9,7 @@ import {
 import { LocaleConfig, CalendarList } from "react-native-calendars";
 import { Audio } from "expo-av";
 import { useAppContext } from "../hook/AppContext.js";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorageのimportを追加
 
 // react-native-calendarsの月の表示を左端に寄せるための設定（jaが日本語設定）
 LocaleConfig.locales["ja"] = {
@@ -64,32 +65,37 @@ const HistoryScreen = ({ route }) => {
   }, [route.params?.alarmStopped, route.params?.playedPhraseIndex]);
 
   // カレンダーを更新する関数
-  const updateCalendar = () => {
+  const updateCalendar = async () => {
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}-${(
       currentDate.getMonth() + 1
     )
       .toString()
       .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+    if (markedDates !== undefined) {
+      // マークされた日付を更新
+      try {
+        setMarkedDates((prevMarkedDates) => {
+          const updatedMarkedDates = {
+            ...prevMarkedDates,
+            [formattedDate]: {
+              selected: true,
+              marked: true,
+              selectedColor: "#facfde",
+            },
+          };
+          console.log(
+            updatedMarkedDates,
+            "カレンダーが更新されました。更新された日付:",
+            formattedDate
+          );
 
-    // マークされた日付を更新
-    setMarkedDates((prevMarkedDates) => {
-      const updatedMarkedDates = {
-        ...prevMarkedDates,
-        [formattedDate]: {
-          selected: true,
-          marked: true,
-          selectedColor: "#facfde",
-        },
-      };
-      console.log(
-        updatedMarkedDates,
-        "カレンダーが更新されました。更新された日付:",
-        formattedDate
-      );
-
-      return updatedMarkedDates;
-    });
+          return updatedMarkedDates;
+        });
+      } catch (error) {
+        console.error("カレンダーの更新中にエラーが発生しました", error);
+      }
+    }
   };
 
   // セリフの達成状態を更新する関数
